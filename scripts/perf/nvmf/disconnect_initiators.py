@@ -47,7 +47,7 @@ class Target(Server):
     def zip_spdk_sources(self, spdk_dir, dest_file):
 #        self.log_print("cebruns - NOT Zipping SPDK source directory")
         fh = zipfile.ZipFile(dest_file, "w", zipfile.ZIP_DEFLATED)
-        for root, directories, files in os.walk(spdk_dir, followlinks=True):
+        for root, directories, files in os.walk(spdk_dir):
             for file in files:
                 fh.write(os.path.relpath(os.path.join(root, file)))
         fh.close()
@@ -169,7 +169,6 @@ class Target(Server):
         for row in rows:
             with open(os.path.join(results_dir, csv_file), "a") as fh:
                 fh.write(row + "\n")
-        self.log_print("You can find the test results in the file %s" % os.path.join(results_dir, csv_file))
 
     def measure_sar(self, results_dir, sar_file_name):
         self.log_print("Waiting %d delay before measuring SAR stats" % self.sar_delay)
@@ -198,7 +197,7 @@ class Initiator(Server):
             self.nvmecli_bin = "nvme"  # Use system-wide nvme-cli
 
         self.ssh_connection = paramiko.SSHClient()
-        self.ssh_connection.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        self.ssh_connection.set_missing_host_key_policy(paramiko.AutoAddPolicy)
         self.ssh_connection.connect(self.ip, username=self.username, password=self.password)
         self.remote_call("sudo rm -rf %s/nvmf_perf" % self.spdk_dir)
         self.remote_call("mkdir -p %s" % self.spdk_dir)
@@ -718,21 +717,12 @@ if __name__ == "__main__":
     spdk_zip_path = "/tmp/spdk.zip"
     target_results_dir = "/tmp/results"
 
-    if (len(sys.argv) > 1):
-        config_file_path = sys.argv[1]
-    else:
-        script_full_dir = os.path.dirname(os.path.realpath(__file__))
-        config_file_path = os.path.join(script_full_dir, "config.json")
-
-    print("Using config file: %s" % config_file_path)
-    with open(config_file_path, "r") as config:
+    with open("./scripts/perf/nvmf/config.json", "r") as config:
         data = json.load(config)
 
     initiators = []
     fio_cases = []
     
-    print ("JSON Loaded: {0}".format(data))
-
     for k, v in data.items():
         if "target" in k:
             if data[k]["mode"] == "spdk":
@@ -765,57 +755,7 @@ if __name__ == "__main__":
         else:
             continue
 
-    # Copy and install SPDK on remote initiators
-    target_obj.zip_spdk_sources(target_obj.spdk_dir, spdk_zip_path)
-    threads = []
+    target_obj.subsys_no = 1
     for i in initiators:
-#        for attr in dir(i):
-#            print("obj.%s = %r" % (attr, getattr(i, attr)))
-
-        if copy_spdk: 
-            i.log_print("Copying/Installing SPDK Sources to initiator")
-            if i.mode == "spdk":
-                t = threading.Thread(target=i.install_spdk, args=(spdk_zip_path,))
-                threads.append(t)
-                t.start()
-        else:
-            i.log_print("Not copying/installing SDPK Sources to initiator")
-    for t in threads:
-        t.join()
-
-    target_obj.tgt_start()
-
-    # Poor mans threading
-    # Run FIO tests
-    for block_size, io_depth, rw in fio_workloads:
-        threads = []
-        configs = []
-        for i in initiators:
-            if i.mode == "kernel":
-                i.kernel_init_connect(i.nic_ips, target_obj.subsys_no)
-
-            cfg = i.gen_fio_config(rw, fio_rw_mix_read, block_size, io_depth, target_obj.subsys_no,
-                                   fio_num_jobs, fio_ramp_time, fio_run_time)
-            configs.append(cfg)
-
-        # cebruns - let's skip runnign FIO from here and use Distributed fio for it
-        for i, cfg in zip(initiators, configs):
-            t = threading.Thread(target=i.run_fio, args=(fio_exe, cfg, fio_run_num))
-            threads.append(t)
-        if target_obj.enable_sar:
-            sar_file_name = "_".join([str(block_size), str(rw), str(io_depth), "sar"])
-            sar_file_name = ".".join([sar_file_name, "txt"])
-            t = threading.Thread(target=target_obj.measure_sar, args=(target_results_dir, sar_file_name))
-            threads.append(t)
-
-        for t in threads:
-            t.start()
-        for t in threads:
-            t.join()
-
-        for i in initiators:
-            if i.mode == "kernel":
-                i.kernel_init_disconnect(i.nic_ips, target_obj.subsys_no)
-            i.copy_result_files(target_results_dir)
-
-    target_obj.parse_results(target_results_dir)
+        if i.mode == "kernel":
+            i.kernel_init_disconnect(i.nic_ips, target_obj.subsys_no)
