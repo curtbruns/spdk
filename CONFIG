@@ -91,7 +91,7 @@ CONFIG_FIO_SOURCE_DIR=/usr/src/fio
 
 # Enable RDMA support for the NVMf target.
 # Requires ibverbs development libraries.
-CONFIG_RDMA=n
+CONFIG_RDMA=y
 CONFIG_RDMA_SEND_WITH_INVAL=n
 
 # Enable FC support for the NVMf target.
