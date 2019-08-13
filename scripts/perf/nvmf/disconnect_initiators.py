@@ -724,13 +724,19 @@ if __name__ == "__main__":
     fio_cases = []
     
     for k, v in data.items():
+        print("Key: {}, Value: {}".format(k, v))
         if "target" in k:
+            # cebruns - translate old keys to RR more descriptive keys
+            data[k]['nic_ips'] = data[k]['target_rdma_ips']
             if data[k]["mode"] == "spdk":
                 print ("Using SPDK Mode")
                 target_obj = SPDKTarget(name=k, **data["general"], **v)
             elif data[k]["mode"] == "kernel":
                 target_obj = KernelTarget(name=k, **data["general"], **v)
         elif "initiator" in k:
+            # cebruns - translate old keys to RR more descriptive keys
+            data[k]['ip'] = data[k]['initiator_mgmt_ip']
+            data[k]['nic_ips'] = data[k]['target_rdma_ips']
             copy_spdk = data[k]["copy_spdk"]
             if data[k]["mode"] == "spdk":
                 init_obj = SPDKInitiator(name=k, **data["general"], **v)

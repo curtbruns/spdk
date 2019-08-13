@@ -2,11 +2,11 @@
     "general": {
         "username": "root",
         "password": "intel123",
-        "transport": "RDMA"
+        "transport": "TCP"
     },
     "target": {
-        "nic_ips": [
-            "10.250.34.162"
+        "target_rdma_ips": [
+            "10.8.1.1"
         ],
         "mode": "spdk",
         "use_null_block": true,
@@ -14,16 +14,13 @@
         "nvmet_dir": "/usr/sbin/nvme",
         "num_cores": 4,
         "num_shared_buffers": 4096,
-        "max_qpairs_per_ctrlr": 16
-    },
-    "initiator1": {
-        "ip": "10.250.35.177",
-        "nic_ips": [
-            "10.250.34.162"
+        "max_qpairs_per_ctrlr": 16,
+        "target_rack_slot_name": [
+            "r6E08",
+            "01",
+            "qq001"
         ],
-        "mode": "kernel",
-        "nvmecli_dir": "/usr/sbin/nvme",
-        "copy_spdk": true
+        "initiators": 6
     },
     "fio": {
         "bs": [
@@ -41,5 +38,89 @@
         "num_jobs": 8,
         "run_num": 1,
         "fio_exe": "/usr/local/bin/fio"
+    },
+    "initiator1": {
+        "initiator_mgmt_ip": "172.20.8.7",
+        "target_rdma_ips": [
+            "10.8.1.1"
+        ],
+        "mode": "spdk",
+        "nvmecli_dir": "/usr/sbin/nvme",
+        "copy_spdk": false,
+        "initiator_rack_slot_name": [
+            "r6E08",
+            7,
+            "qq007"
+        ]
+    },
+    "initiator2": {
+        "initiator_mgmt_ip": "172.20.8.6",
+        "target_rdma_ips": [
+            "10.8.1.1"
+        ],
+        "mode": "spdk",
+        "nvmecli_dir": "/usr/sbin/nvme",
+        "copy_spdk": false,
+        "initiator_rack_slot_name": [
+            "r6E08",
+            6,
+            "qq006"
+        ]
+    },
+    "initiator3": {
+        "initiator_mgmt_ip": "172.20.8.5",
+        "target_rdma_ips": [
+            "10.8.1.1"
+        ],
+        "mode": "spdk",
+        "nvmecli_dir": "/usr/sbin/nvme",
+        "copy_spdk": false,
+        "initiator_rack_slot_name": [
+            "r6E08",
+            5,
+            "qq005"
+        ]
+    },
+    "initiator4": {
+        "initiator_mgmt_ip": "172.20.8.4",
+        "target_rdma_ips": [
+            "10.8.1.1"
+        ],
+        "mode": "spdk",
+        "nvmecli_dir": "/usr/sbin/nvme",
+        "copy_spdk": false,
+        "initiator_rack_slot_name": [
+            "r6E08",
+            4,
+            "qq004"
+        ]
+    },
+    "initiator5": {
+        "initiator_mgmt_ip": "172.20.8.3",
+        "target_rdma_ips": [
+            "10.8.1.1"
+        ],
+        "mode": "spdk",
+        "nvmecli_dir": "/usr/sbin/nvme",
+        "copy_spdk": false,
+        "initiator_rack_slot_name": [
+            "r6E08",
+            3,
+            "qq003"
+        ]
+    },
+    "initiator6": {
+        "initiator_mgmt_ip": "172.20.8.2",
+        "target_rdma_ips": [
+            "10.8.1.1"
+        ],
+        "mode": "spdk",
+        "nvmecli_dir": "/usr/sbin/nvme",
+        "copy_spdk": false,
+        "initiator_rack_slot_name": [
+            "r6E08",
+            2,
+            "qq002"
+        ]
     }
 }

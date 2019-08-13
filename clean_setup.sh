@@ -12,3 +12,7 @@ sleep 3;
 
 echo "Launching setup_nvmf_target_initators.py"
 python3 scripts/perf/nvmf/setup_nvmf_target_initators.py
+
+echo "Launching HTTP JSON Proxy"
+IP=172.20.8.1
+./scripts/rpc_http_proxy.py ${IP} 8000 user password
