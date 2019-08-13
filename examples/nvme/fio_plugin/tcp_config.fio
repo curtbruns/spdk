@@ -1,0 +1,18 @@
+[global]
+ioengine=spdk
+thread=1
+group_reporting=1
+direct=1
+verify=0
+time_based=1
+ramp_time=10
+runtime=10
+rw=randread
+bs=4k
+norandommap=1
+
+numjobs=${JOBS}
+iodepth=${DEPTH}
+
+[test]
+filename=trtype=TCP adrfam=IPv4 traddr=10.28.31.1 trsvcid=4420 ns=1
