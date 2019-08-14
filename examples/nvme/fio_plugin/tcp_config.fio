@@ -15,4 +15,4 @@ numjobs=${JOBS}
 iodepth=${DEPTH}
 
 [test]
-filename=trtype=TCP adrfam=IPv4 traddr=${TARGET} trsvcid=4420 ns=1
+filename=trtype=TCP adrfam=IPv4 traddr=${IP} trsvcid=4420 ns=1
