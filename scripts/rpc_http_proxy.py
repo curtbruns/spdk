@@ -112,7 +112,7 @@ def main():
     try:
         ServerHandler.key = key
         httpd = HTTPServer((sys.argv[1], int(sys.argv[2])), ServerHandler)
-        print('Started RPC http proxy server')
+        print('Started RPC http proxy server', flush=True)
         httpd.serve_forever()
     except KeyboardInterrupt:
         print('Shutting down server')
