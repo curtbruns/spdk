@@ -69,7 +69,7 @@ class Target(Server):
 
             read_iops = float(data["jobs"][job_pos]["read"]["iops"])
             read_bw = float(data["jobs"][job_pos]["read"]["bw"])
-           
+
             disks = 0
             for disk in data["disk_util"]:
                 #self.log_print("Disk found: %s" % disk["name"])
@@ -481,7 +481,7 @@ class KernelTarget(Target):
 
 class SPDKTarget(Target):
     def __init__(self, name, username, password, mode, nic_ips, num_cores, num_shared_buffers=4096,
-                 use_null_block=False, sar_settings=None, transport="rdma", num_null_devices=1, 
+                 use_null_block=False, sar_settings=None, transport="rdma", num_null_devices=1,
                  max_qpairs_per_ctrlr=32, **kwargs):
         super(SPDKTarget, self).__init__(name, username, password, mode, nic_ips, transport, use_null_block, sar_settings)
         self.num_cores = num_cores
@@ -722,7 +722,7 @@ if __name__ == "__main__":
 
     initiators = []
     fio_cases = []
-    
+
     print ("JSON Loaded: {0}".format(data))
 
     for k, v in data.items():
@@ -769,7 +769,7 @@ if __name__ == "__main__":
 #        for attr in dir(i):
 #            print("obj.%s = %r" % (attr, getattr(i, attr)))
 
-        if copy_spdk: 
+        if copy_spdk:
             i.log_print("Copying/Installing SPDK Sources to initiator")
             if i.mode == "spdk":
                 t = threading.Thread(target=i.install_spdk, args=(spdk_zip_path,))
@@ -791,7 +791,7 @@ if __name__ == "__main__":
         for i in initiators:
             if i.mode == "kernel":
                 i.kernel_init_connect(i.nic_ips, target_obj.subsys_no)
-                cfg = i.gen_fio_config(rw, fio_rw_mix_read, block_size, io_depth, 
+                cfg = i.gen_fio_config(rw, fio_rw_mix_read, block_size, io_depth,
                         target_obj.subsys_no, fio_num_jobs, fio_ramp_time, fio_run_time)
                 configs.append(cfg)
         break

@@ -69,7 +69,7 @@ class Target(Server):
 
             read_iops = float(data["jobs"][job_pos]["read"]["iops"])
             read_bw = float(data["jobs"][job_pos]["read"]["bw"])
-           
+
             disks = 0
             for disk in data["disk_util"]:
                 #self.log_print("Disk found: %s" % disk["name"])
@@ -481,7 +481,7 @@ class KernelTarget(Target):
 
 class SPDKTarget(Target):
     def __init__(self, name, username, password, mode, nic_ips, num_cores, num_shared_buffers=4096,
-                 use_null_block=False, sar_settings=None, transport="rdma", num_null_devices=1, 
+                 use_null_block=False, sar_settings=None, transport="rdma", num_null_devices=1,
                  max_qpairs_per_ctrlr=32, **kwargs):
         super(SPDKTarget, self).__init__(name, username, password, mode, nic_ips, transport, use_null_block, sar_settings)
         self.num_cores = num_cores
@@ -722,7 +722,7 @@ if __name__ == "__main__":
 
     initiators = []
     fio_cases = []
-    
+
     for k, v in data.items():
         print("Key: {}, Value: {}".format(k, v))
         if "target" in k:
