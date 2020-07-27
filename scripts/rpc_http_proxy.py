@@ -113,7 +113,7 @@ def main():
         httpd = HTTPServer((args.host, args.port), ServerHandler)
         if args.cert is not None:
             httpd.socket = ssl.wrap_socket(httpd.socket, certfile=args.cert, server_side=True)
-        print('Started RPC http proxy server')
+        print('Started RPC http proxy server',flush=True)
         httpd.serve_forever()
     except KeyboardInterrupt:
         print('Shutting down server')
